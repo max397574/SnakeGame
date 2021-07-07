@@ -3,40 +3,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-
-//Macros//
-
 #define DELAY 90000
 #define RIGHT 1
 #define DOWN 2
 #define LEFT 3
 #define UP 4
-
-//Variables and arrays//
-
 int x[200]={5};
 int y[200]={5};
 int max_x;
 int max_y;
 int food_x;
 int food_y;
-int no_food=0;
 char ch;
 char endch;
 int direction=RIGHT;	//Default direction is right//
 int testch;
-char newfood;
-
 int k;
-int i;
 int j;
 int length=5;		//starting length is 5//
-int score;
-
+int score=0;
 int end=0;
-
-//Functions//
-
 int kbhit(void)
 {
     int ch = getch();
@@ -47,8 +33,6 @@ int kbhit(void)
         return 0;
     }
 }
-
-
 
 void food(void){		//generate random numbers for the cords of the food//
 	food_x=rand()%max_x-1;
@@ -78,8 +62,6 @@ void eat(void){
 }
 
 int main(int argc, char *argv[]) {
-
-
     getmaxyx(stdscr, max_y, max_x);
     initscr();
     noecho();
@@ -87,10 +69,8 @@ int main(int argc, char *argv[]) {
     scrollok(stdscr, TRUE);
     food();
     mvprintw(food_y,food_x, "O");
-
     sleep(1);
     while(1) {
-
 	if (kbhit()) {		//check if WASD hit//
 	    ch=getch();
 		if (ch=='w'){				//change direction but not to the opposite//
@@ -119,7 +99,6 @@ int main(int argc, char *argv[]) {
 	    else if (direction==DOWN){
 		y[0]++;}
 	    game_over();
-
 	    if (end==0) {
 		system("clear");
 		printf("\n\nGAME OVER\n\n");
@@ -134,9 +113,6 @@ int main(int argc, char *argv[]) {
 	    mvprintw(food_y,food_x, "O");
 	    refresh();
 	}
-
-
     }
-
-    endwin(); // Restore normal terminal behavior
+    endwin();
 }
