@@ -10,8 +10,8 @@
 #define LEFT 3
 #define UP 4
 
-int x[200]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-int y[200]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+int x[200]={2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+int y[200]={2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 int max_x;
 int max_y;
 int food_x;
@@ -44,19 +44,19 @@ void game_over(void){
 	testch = mvinch(y[0], x[0]);
 	if(testch=='o'){
 		end=1;}
-	else if(x[0]>=max_x){
+	else if(x[0]>=max_x-1){
 		end=1;}
-	else if(y[0]>=max_y){
+	else if(y[0]>=max_y-5){
 		end=1;}
-	else if(x[0]<0){
+	else if(x[0]<1){
 		end=1;}
-	else if(y[0]<0){
+	else if(y[0]<1){
 		end=1;}
 }
 
 void food(void){
-	food_x=rand()%max_x;
-	food_y=rand()%max_y;}
+	food_x=rand()%max_x-1;
+	food_y=rand()%max_y-6;}
 
 void eat(void){	
 	if(x[0]==food_x&&y[0]==food_y){
@@ -65,6 +65,16 @@ void eat(void){
 		food();}
 }
 
+void draw_borders(void) {
+    for (int i=0; i<=max_x; i++) {
+	mvprintw(0,i,"-");
+	mvprintw(max_y-5,i,"-");
+    }
+    for (int i=0; i<=max_y; i++) {
+	mvprintw(i,0,"|");
+	mvprintw(i,(max_x-1),"|");
+    }
+}
 
 
 int main(void)
@@ -91,6 +101,9 @@ int main(void)
     	    if (direction!=UP)direction = DOWN;}
     	else if (ch=='a'){
     	    if (direction!=RIGHT)direction = LEFT;}
+	else if (ch=='f') {
+	    food();
+	}
 
         }
         else {
@@ -114,19 +127,24 @@ int main(void)
 
         game_over();
         if(end==1){
-    	system("clear");
-    	printf("\n\nGAME OVER\n\n");
-    	printf("\n\nYour score was %d.\n\n\n",score);
-    	exit(0);
+	    system("clear");
+	    printf("\n\nGAME OVER\n\n");
+	    printf("\n\nYour score was %d.\n\n\n",score);
+	    exit(0);
         }
 
         clear();			//print all points//
         for (j=length-1; j>=0; j--){
-    	mvprintw(y[j], x[j], "o");}
+	    mvprintw(y[j], x[j], "o");}
         eat();
         mvprintw(food_y, food_x, "O");
+	mvprintw(max_y-3, 3, "Score: %d",score);
+	mvprintw(max_y-2, 3, "Press 'f' if there is no food visible");
+	draw_borders();
         refresh();
         }
     }
 endwin();
 }
+
+
