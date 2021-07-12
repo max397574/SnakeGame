@@ -10,8 +10,8 @@
 #define LEFT 3
 #define UP 4
 
-int x[200]={2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-int y[200]={2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+int x[200]={2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+int y[200]={2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 int max_x;
 int max_y;
 int food_x;
@@ -20,6 +20,7 @@ char ch;
 char endch;
 int direction=RIGHT;
 int testch;
+int rounds=0;
 
 int k;
 int j;
@@ -41,17 +42,21 @@ int kbhit(void)
 }
 
 void game_over(void){
-	testch = mvinch(y[0], x[0]);
-	if(testch=='o'){
-		end=1;}
-	else if(x[0]>=max_x-1){
-		end=1;}
-	else if(y[0]>=max_y-5){
-		end=1;}
-	else if(x[0]<1){
-		end=1;}
-	else if(y[0]<1){
-		end=1;}
+    if (rounds>=10) {
+	for (int i=1; i<=length; i++) {
+	    if (x[i]==x[0]&&y[i]==y[0]) {
+		end=1;
+	    }
+	}
+    }
+    if(x[0]>=max_x-1){
+    	end=1;}
+    else if(y[0]>=max_y-5){
+    	end=1;}
+    else if(x[0]<1){
+    	end=1;}
+    else if(y[0]<1){
+    	end=1;}
 }
 
 void food(void){
@@ -91,39 +96,39 @@ int main(void)
     food();
 
     while (1) {
+	rounds++;
         if (kbhit()) {		//check if WASD hit//
     	ch=getch();
-    	if (ch=='w'){				//change direction but not to the opposite//
-    	    if (direction!=DOWN)direction= UP;}	//to avoid GAME OVER//
-    	else if (ch=='d'){
-    	    if (direction!=LEFT)direction = RIGHT;}
-    	else if (ch=='s'){
-    	    if (direction!=UP)direction = DOWN;}
-    	else if (ch=='a'){
-    	    if (direction!=RIGHT)direction = LEFT;}
-	else if (ch=='f') {
-	    food();
-	}
-
+	    if (ch=='w'){				//change direction but not to the opposite//
+		if (direction!=DOWN)direction= UP;}	//to avoid GAME OVER//
+	    else if (ch=='d'){
+		if (direction!=LEFT)direction = RIGHT;}
+	    else if (ch=='s'){
+		if (direction!=UP)direction = DOWN;}
+	    else if (ch=='a'){
+		if (direction!=RIGHT)direction = LEFT;}
+	    else if (ch=='f') {
+		food();
+	    }
         }
         else {
 
         k=length-1;		//asign value of the point before-> the snake moves//
         while (k>0){
-        x[k]=x[k-1];
-        y[k]=y[k-1];
-        k--;
+	    x[k]=x[k-1];
+	    y[k]=y[k-1];
+	    k--;
         }
 
         usleep(DELAY);			//in-/decrease x/y depending on direction//
         if (direction==RIGHT){
-    	x[0]++;}
+	    x[0]++;}
         else if (direction==LEFT){
-    	x[0]--;}
+	    x[0]--;}
         else if (direction==UP){
-    	y[0]--;}
+	    y[0]--;}
         else if (direction==DOWN){
-    	y[0]++;}
+	    y[0]++;}
 
         game_over();
         if(end==1){
