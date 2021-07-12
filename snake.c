@@ -4,24 +4,28 @@
 #include <stdio.h>
 #include <time.h>
 
-#define DELAY 90000
 #define RIGHT 1
 #define DOWN 2
 #define LEFT 3
 #define UP 4
+#define LENGHT 1
+#define SPEED 2
 
 int x[200]={5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 int y[200]={5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+int delay=90000;
 int max_x;
 int max_y;
 int food_x;
 int food_y;
 char ch;
 char endch;
+int nokey=1;
 int direction=RIGHT;
 int testch;
 int rounds=0;
 int increment=1;
+int mode=3;
 
 int k;
 int j;
@@ -70,7 +74,12 @@ void food(void){
 void eat(void){	
 	if(x[0]==food_x&&y[0]==food_y){
 		score++;
-		length+=increment;
+		if (mode==LENGHT) {
+		    length+=increment;
+		}
+		else {
+		    delay-=5000;
+		}
 		food();}
 }
 
@@ -97,6 +106,24 @@ int main(void)
     curs_set(FALSE);
     scrollok(stdscr, TRUE);
     food();
+    clear();
+    while(mode==3) {
+	if (kbhit()) {
+	    ch=getch();
+	    if (ch=='l') {
+		mode=LENGHT;
+	    }
+	    else {
+		mode=SPEED;
+	    }
+	    nokey=0;
+	    continue;
+	}
+	mvprintw(20,0,"\t\tChoose your mode:\n\t\t'l' to increment length after eating\n\t\t's'to incremt speed\n\n\t\tStandart will be lenght");
+	refresh();
+	usleep(delay*50);
+	clear();
+    }
 
     while (1) {
 	rounds++;
@@ -123,7 +150,7 @@ int main(void)
 	    k--;
         }
 
-        usleep(DELAY);			//in-/decrease x/y depending on direction//
+        usleep(delay);			//in-/decrease x/y depending on direction//
         if (direction==RIGHT){
 	    x[0]++;}
         else if (direction==LEFT){
