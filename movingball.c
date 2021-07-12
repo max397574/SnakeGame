@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     int y[200]={5};
     int max_y = 0, max_x = 0;
     int next_x = 0;
-    int direction = 1;
+    int direction = RIGHT;
 
     initscr();
     noecho();
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 
     while(1) {
 	clear();
-	mvprintw(x[0], x[0], "o");
+	mvprintw(y[0], x[0], "o");
 	refresh();
 
 	usleep(DELAY);
