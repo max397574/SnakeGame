@@ -10,8 +10,8 @@
 #define LEFT 3
 #define UP 4
 
-int x[200]={2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-int y[200]={2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+int x[200]={5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+int y[200]={5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 int max_x;
 int max_y;
 int food_x;
@@ -42,6 +42,7 @@ int kbhit(void)
 }
 
 void game_over(void){
+    testch = mvinch(y[0], x[0]);
     if (rounds>=10) {
 	for (int i=1; i<=length; i++) {
 	    if (x[i]==x[0]&&y[i]==y[0]) {
@@ -49,13 +50,15 @@ void game_over(void){
 	    }
 	}
     }
+    if (testch=='-'||testch=='|') {
+	end=1;}
     if(x[0]>=max_x-1){
     	end=1;}
     else if(y[0]>=max_y-5){
     	end=1;}
-    else if(x[0]<1){
+    else if(x[0]<=3){
     	end=1;}
-    else if(y[0]<1){
+    else if(y[0]<0){
     	end=1;}
 }
 
@@ -72,7 +75,6 @@ void eat(void){
 
 void draw_borders(void) {
     for (int i=0; i<=max_x; i++) {
-	mvprintw(0,i,"-");
 	mvprintw(max_y-5,i,"-");
     }
     for (int i=0; i<=max_y; i++) {
