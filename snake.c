@@ -21,6 +21,7 @@ char endch;
 int direction=RIGHT;
 int testch;
 int rounds=0;
+int increment=1;
 
 int k;
 int j;
@@ -69,7 +70,7 @@ void food(void){
 void eat(void){	
 	if(x[0]==food_x&&y[0]==food_y){
 		score++;
-		length++;
+		length+=increment;
 		food();}
 }
 
