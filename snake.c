@@ -46,50 +46,52 @@ int kbhit(void)
     }
 }
 
-void game_over(void){
+int game_over(void){
+    bool game_over=false;
     testch = mvinch(y[0], x[0]);
     if (rounds>=10) {
-	for (int i=1; i<=length; i++) {
-	    if (x[i]==x[0]&&y[i]==y[0]) {
-		end=1;
-	    }
-	}
+        for (int i=1; i<=length; i++) {
+            if (x[i]==x[0]&&y[i]==y[0]) {
+                game_over=true;
+            }
+        }
     }
     if (testch=='-'||testch=='|') {
-	end=1;}
-    if(x[0]>=max_x-1){
-    	end=1;}
-    else if(y[0]>=max_y-5){
-    	end=1;}
-    else if(x[0]<=3){
-    	end=1;}
-    else if(y[0]<0){
-    	end=1;}
+        game_over=true;}
+    if(x[0]==max_x-1){
+        game_over=true;}
+    else if(y[0]==max_y-5){
+        game_over=true;}
+    else if(x[0]==3){
+        game_over=true;}
+    else if(y[0]==-1){
+        game_over=true;}
+    return game_over;
 }
 
 void food(void){
-	food_x=rand()%max_x-1;
-	food_y=rand()%max_y-6;}
+    food_x=rand()%max_x-1;
+    food_y=rand()%max_y-6;}
 
 void eat(void){	
-	if(x[0]==food_x&&y[0]==food_y){
-		score++;
-		if (mode==LENGHT) {
-		    length+=increment;
-		}
-		else {
-		    delay-=5000;
-		}
-		food();}
+    if(x[0]==food_x&&y[0]==food_y){
+        score++;
+        if (mode==LENGHT) {
+            length+=increment;
+        }
+        else {
+            delay-=5000;
+        }
+        food();}
 }
 
 void draw_borders(void) {
     for (int i=0; i<=max_x; i++) {
-	mvprintw(max_y-5,i,"-");
+        mvprintw(max_y-5,i,"-");
     }
     for (int i=0; i<=max_y; i++) {
-	mvprintw(i,0,"|");
-	mvprintw(i,(max_x-1),"|");
+        mvprintw(i,0,"|");
+        mvprintw(i,(max_x-1),"|");
     }
 }
 
@@ -108,78 +110,76 @@ int main(void)
     food();
     clear();
     while(mode==3) {
-	if (kbhit()) {
-	    ch=getch();
-	    if (ch=='l') {
-		mode=LENGHT;
-	    }
-	    else {
-		mode=SPEED;
-	    }
-	    nokey=0;
-	    continue;
-	}
-	mvprintw(20,0,"\t\tChoose your mode:\n\t\t'l' to increment length after eating\n\t\t's'to incremt speed\n\n\t\tStandart will be lenght");
-	refresh();
-	usleep(delay*50);
-	clear();
+        if (kbhit()) {
+            ch=getch();
+            if (ch=='l') {
+                mode=LENGHT;
+            }
+            else {
+                mode=SPEED;
+            }
+            nokey=0;
+            continue;
+        }
+        mvprintw(20,0,"\t\tChoose your mode:\n\t\t'l' to increment length after eating\n\t\t's'to incremt speed\n\n\t\tPress the character until the game starts. \n\t\tStandart will be lenght");
+        refresh();
+        usleep(delay*50);
+        clear();
     }
 
     while (1) {
-	rounds++;
+        rounds++;
         if (kbhit()) {		//check if WASD hit//
-    	ch=getch();
-	    if (ch=='w'){				//change direction but not to the opposite//
-		if (direction!=DOWN)direction= UP;}	//to avoid GAME OVER//
-	    else if (ch=='d'){
-		if (direction!=LEFT)direction = RIGHT;}
-	    else if (ch=='s'){
-		if (direction!=UP)direction = DOWN;}
-	    else if (ch=='a'){
-		if (direction!=RIGHT)direction = LEFT;}
-	    else if (ch=='f') {
-		food();
-	    }
+            ch=getch();
+            if (ch=='w'){				//change direction but not to the opposite//
+                if (direction!=DOWN)direction= UP;}	//to avoid GAME OVER//
+            else if (ch=='d'){
+                if (direction!=LEFT)direction = RIGHT;}
+            else if (ch=='s'){
+                if (direction!=UP)direction = DOWN;}
+            else if (ch=='a'){
+                if (direction!=RIGHT)direction = LEFT;}
+            else if (ch=='f') {
+                food();
+            }
         }
         else {
 
-        k=length-1;		//asign value of the point before-> the snake moves//
-        while (k>0){
-	    x[k]=x[k-1];
-	    y[k]=y[k-1];
-	    k--;
-        }
+            k=length-1;		//asign value of the point before-> the snake moves//
+            while (k>0){
+                x[k]=x[k-1];
+                y[k]=y[k-1];
+                k--;
+            }
 
-        usleep(delay);			//in-/decrease x/y depending on direction//
-        if (direction==RIGHT){
-	    x[0]++;}
-        else if (direction==LEFT){
-	    x[0]--;}
-        else if (direction==UP){
-	    y[0]--;}
-        else if (direction==DOWN){
-	    y[0]++;}
+            usleep(delay);			//in-/decrease x/y depending on direction//
+            if (direction==RIGHT){
+                x[0]++;}
+            else if (direction==LEFT){
+                x[0]--;}
+            else if (direction==UP){
+                y[0]--;}
+            else if (direction==DOWN){
+                y[0]++;}
 
-        game_over();
-        if(end==1){
-	    system("clear");
-	    printf("\n\nGAME OVER\n\n");
-	    printf("\n\nYour score was %d.\n\n\n",score);
-	    exit(0);
-        }
+            if(game_over()){
+                system("clear");
+                printf("\n\nGAME OVER\n\n");
+                printf("\n\nYour score was %d.\n\n\n",score);
+                exit(0);
+            }
 
-        clear();			//print all points//
-        for (j=length-1; j>=0; j--){
-	    mvprintw(y[j], x[j], "o");}
-        eat();
-        mvprintw(food_y, food_x, "O");
-	mvprintw(max_y-3, 3, "Score: %d",score);
-	mvprintw(max_y-2, 3, "Press 'f' if there is no food visible");
-	draw_borders();
-        refresh();
+            clear();			//print all points//
+            for (j=length-1; j>=0; j--){
+                mvprintw(y[j], x[j], "o");}
+            eat();
+            mvprintw(food_y, food_x, "O");
+            mvprintw(max_y-3, 3, "Score: %d",score);
+            mvprintw(max_y-1, 3, "Score: %d,%d",x[0],y[0]);
+            mvprintw(max_y-2, 3, "Press 'f' if there is no food visible");
+            draw_borders();
+            refresh();
         }
     }
-endwin();
+    endwin();
 }
-
-
